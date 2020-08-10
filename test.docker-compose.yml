@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  psql:
+    build: ./docker/psql
+    image: converse-psql
+    container_name: converse-psql
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
