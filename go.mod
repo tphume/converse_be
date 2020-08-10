@@ -1,4 +1,4 @@
-module github.com/tphume/converse-be
+module github.com/tphume/converse_be
 
 go 1.14
 

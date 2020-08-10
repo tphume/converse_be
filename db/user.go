@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/tphume/converse-be"
+	"github.com/tphume/converse_be"
 )
 
 // Represent interactions to the user table in the database
