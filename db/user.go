@@ -17,7 +17,7 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
 	defer cancel()
 
-	_, err := s.DB.NamedExecContext(ctx, sqlCreate, user)
+	_, err := s.DB.NamedExecContext(ctx, userCreate, user)
 	if err != nil {
 		return err
 	}
@@ -26,7 +26,20 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 }
 
 func (s *UserService) ReadUser(user *converse_be.User) error {
-	panic("implement me")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	defer cancel()
+
+	stmt, err := s.DB.PrepareNamedContext(ctx, userRead)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	if err := stmt.GetContext(ctx, user, user); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *UserService) UpdateUser(user *converse_be.User) error {
@@ -39,5 +52,6 @@ func (s *UserService) DeleteUser(name string, id string) error {
 
 // Exec and Query strings
 const (
-	sqlCreate = `INSERT INTO users (id, name, password) VALUES (:id, :name, :password)`
+	userCreate = `INSERT INTO users (id, name, password) VALUES (:id, :name, :password)`
+	userRead   = `SELECT (id, name) FROM users WHERE id=:id`
 )
