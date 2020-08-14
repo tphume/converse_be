@@ -27,7 +27,7 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 
 // Read a user by id - doesn't return password
 func (s *UserService) ReadUser(user *converse_be.User) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
 	stmt, err := s.DB.PrepareNamedContext(ctx, userRead)
@@ -57,8 +57,16 @@ func (s *UserService) UpdatePassword(id string, password string) error {
 }
 
 // Delete a user by id
-func (s *UserService) DeleteUser(name string, id string) error {
-	panic("implement me")
+func (s *UserService) DeleteUser(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	defer cancel()
+
+	_, err := s.DB.ExecContext(ctx, userDelete, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Exec and Query strings
@@ -66,4 +74,5 @@ const (
 	userCreate         = `INSERT INTO users (id, name, password) VALUES (:id, :name, :password)`
 	userRead           = `SELECT (id, name) FROM users WHERE id=:id`
 	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
+	userDelete         = `DELETE FROM users WHERE id=$1`
 )
