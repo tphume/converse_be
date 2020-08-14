@@ -12,7 +12,7 @@ type UserService struct {
 	DB *sqlx.DB
 }
 
-// Basic CRUD methods
+// Create a new user
 func (s *UserService) CreateUser(user *converse_be.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
 	defer cancel()
@@ -25,6 +25,7 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 	return nil
 }
 
+// Read a user by id - doesn't return password
 func (s *UserService) ReadUser(user *converse_be.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
 	defer cancel()
@@ -42,16 +43,27 @@ func (s *UserService) ReadUser(user *converse_be.User) error {
 	return nil
 }
 
-func (s *UserService) UpdateUser(user *converse_be.User) error {
-	panic("implement me")
+// Update user's password by id
+func (s *UserService) UpdatePassword(id string, password string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	defer cancel()
+
+	_, err := s.DB.ExecContext(ctx, userUpdatePassword, password, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
+// Delete a user by id
 func (s *UserService) DeleteUser(name string, id string) error {
 	panic("implement me")
 }
 
 // Exec and Query strings
 const (
-	userCreate = `INSERT INTO users (id, name, password) VALUES (:id, :name, :password)`
-	userRead   = `SELECT (id, name) FROM users WHERE id=:id`
+	userCreate         = `INSERT INTO users (id, name, password) VALUES (:id, :name, :password)`
+	userRead           = `SELECT (id, name) FROM users WHERE id=:id`
+	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
 )
