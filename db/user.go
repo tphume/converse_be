@@ -106,7 +106,7 @@ func (s *UserService) DeleteUser(id string) error {
 const (
 	userCreate         = `INSERT INTO users (id, username, password) VALUES (:id, :username, :password)`
 	userCredentials    = `SELECT * FROM users WHERE username=:username AND password=:password LIMIT 1`
-	userRead           = `SELECT (id, username) FROM users WHERE id=:id`
+	userRead           = `SELECT (id, username, status) FROM users WHERE id=:id`
 	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
 	userUpdateStatus   = `UPDATE users SET status=$1 WHERE id=$2`
 	userDelete         = `DELETE FROM users WHERE id=$1`
