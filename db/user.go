@@ -25,6 +25,26 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 	return nil
 }
 
+// Validate user with username and password - then populate it if authenticated
+func (s *UserService) ValidateCredentials(user *converse_be.User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+	defer cancel()
+
+	stmt, err := s.DB.PrepareNamedContext(ctx, userCredentials)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	if err := stmt.GetContext(ctx, user, user); err != nil {
+		return err
+	} else {
+		stmt.Close()
+	}
+
+	return nil
+}
+
 // Read a user by id - doesn't return password
 func (s *UserService) ReadUser(user *converse_be.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
@@ -85,6 +105,7 @@ func (s *UserService) DeleteUser(id string) error {
 // Exec and Query strings
 const (
 	userCreate         = `INSERT INTO users (id, username, password) VALUES (:id, :username, :password)`
+	userCredentials    = `SELECT * FROM users WHERE username=:username AND password=:password LIMIT 1`
 	userRead           = `SELECT (id, username) FROM users WHERE id=:id`
 	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
 	userUpdateStatus   = `UPDATE users SET status=$1 WHERE id=$2`
