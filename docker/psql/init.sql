@@ -1,8 +1,9 @@
 CREATE TABLE users
 (
     id       CHAR(36)    NOT NULL,
-    username     VARCHAR(20) NOT NULL UNIQUE,
+    username VARCHAR(20) NOT NULL UNIQUE,
     password CHAR(60)    NOT NULL,
+    status   VARCHAR(30),
     PRIMARY KEY (id)
 );
 

@@ -56,6 +56,19 @@ func (s *UserService) UpdatePassword(id string, password string) error {
 	return nil
 }
 
+// Update a user's status by id
+func (s *UserService) UpdateStatus(id string, status string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	defer cancel()
+
+	_, err := s.DB.ExecContext(ctx, userUpdateStatus, status, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Delete a user by id
 func (s *UserService) DeleteUser(id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
@@ -74,5 +87,6 @@ const (
 	userCreate         = `INSERT INTO users (id, username, password) VALUES (:id, :username, :password)`
 	userRead           = `SELECT (id, username) FROM users WHERE id=:id`
 	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
+	userUpdateStatus   = `UPDATE users SET status=$1 WHERE id=$2`
 	userDelete         = `DELETE FROM users WHERE id=$1`
 )
