@@ -25,8 +25,8 @@ func (s *UserService) CreateUser(user *converse_be.User) error {
 	return nil
 }
 
-// Validate user with username and password - then populate it if authenticated
-func (s *UserService) ValidateCredentials(user *converse_be.User) error {
+// Read a user by username - return password
+func (s *UserService) ReadUserWithCredentials(user *converse_be.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
@@ -105,8 +105,8 @@ func (s *UserService) DeleteUser(id string) error {
 // Exec and Query strings
 const (
 	userCreate         = `INSERT INTO users (id, username, password) VALUES (:id, :username, :password)`
-	userCredentials    = `SELECT * FROM users WHERE username=:username AND password=:password LIMIT 1`
-	userRead           = `SELECT (id, username, status) FROM users WHERE id=:id`
+	userCredentials    = `SELECT * FROM users WHERE username=:username LIMIT 1`
+	userRead           = `SELECT (id, username, status) FROM users WHERE id=:id LIMIT 1`
 	userUpdatePassword = `UPDATE users SET password=$1 WHERE id=$2`
 	userUpdateStatus   = `UPDATE users SET status=$1 WHERE id=$2`
 	userDelete         = `DELETE FROM users WHERE id=$1`
