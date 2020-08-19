@@ -1,5 +1,9 @@
 version: "3.8"
 
+networks:
+  converse-test-network:
+    driver: bridge
+
 services:
   psql:
     build: ./docker/psql
@@ -8,10 +12,18 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+    logging:
+      driver: none
+    networks:
+      - converse-test-network
 
   converse:
-    build: ./docker/test.Dockerfile
+    build:
+      context: .
+      dockerfile: test.Dockerfile
     image: converse-test
     container_name: test-converse
     depends_on:
       - psql
+    networks:
+      - converse-test-network
