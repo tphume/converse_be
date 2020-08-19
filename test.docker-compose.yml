@@ -8,3 +8,10 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+
+  converse:
+    build: ./docker/test.Dockerfile
+    image: converse-test
+    container_name: test-converse
+    depends_on:
+      - psql
