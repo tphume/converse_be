@@ -94,6 +94,23 @@ func (s *UserTestSuite) TestCreateReadCredentials() {
 	s.Equal(*user, *readUser)
 }
 
+// Test Update password and status
+func (s *UserTestSuite) TestUpdate() {
+	newPassword := padPassword("newPassword")
+	newStatus := "newStatus"
+
+	s.Require().NoError(s.service.UpdatePassword(users[0].ID, newPassword))
+	s.Require().NoError(s.service.UpdateStatus(users[0].ID, newStatus))
+
+	readUserCredentials := &converse_be.User{Username: users[0].Username}
+	s.Require().NoError(s.service.ReadUserWithCredentials(readUserCredentials))
+	s.Equal(newPassword, readUserCredentials.Password)
+
+	readUser := &converse_be.User{ID: padID("1")}
+	s.Require().NoError(s.service.ReadUser(readUser))
+	s.Equal(newStatus, readUser.Status)
+}
+
 // Run test suite
 func TestUserSuite(t *testing.T) {
 	suite.Run(t, new(UserTestSuite))
