@@ -113,6 +113,17 @@ func (s *UserTestSuite) TestUpdate() {
 	s.Equal("", readUser.Password)
 }
 
+// Test delete and create
+func (s *UserTestSuite) TestDeleteCreate() {
+	for _, user := range users {
+		s.Require().NoError(s.service.DeleteUser(user.ID))
+	}
+
+	for _, user := range users {
+		s.Require().NoError(s.service.CreateUser(&user))
+	}
+}
+
 // Run test suite
 func TestUserSuite(t *testing.T) {
 	suite.Run(t, new(UserTestSuite))
