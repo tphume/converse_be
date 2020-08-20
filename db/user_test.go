@@ -105,10 +105,12 @@ func (s *UserTestSuite) TestUpdate() {
 	readUserCredentials := &converse_be.User{Username: users[0].Username}
 	s.Require().NoError(s.service.ReadUserWithCredentials(readUserCredentials))
 	s.Equal(newPassword, readUserCredentials.Password)
+	s.Equal(newStatus, readUserCredentials.Status)
 
 	readUser := &converse_be.User{ID: padID("1")}
 	s.Require().NoError(s.service.ReadUser(readUser))
 	s.Equal(newStatus, readUser.Status)
+	s.Equal("", readUser.Password)
 }
 
 // Run test suite
