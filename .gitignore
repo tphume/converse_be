@@ -16,3 +16,6 @@
 
 # Jetbrains configurations
 .idea
+
+# Docker volume files
+volume
