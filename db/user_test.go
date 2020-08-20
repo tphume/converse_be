@@ -22,7 +22,7 @@ var users = []converse_be.User{
 // Configurations
 const (
 	driver  = "postgres"
-	connStr = "postgres://user:password@converse-test-network:5432"
+	connStr = "postgres://user:password@psql:5432/?sslmode=disable"
 )
 
 type UserTestSuite struct {
