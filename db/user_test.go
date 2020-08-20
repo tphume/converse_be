@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
 	"github.com/tphume/converse_be"
 	"time"
@@ -17,14 +18,31 @@ var users = []converse_be.User{
 	{ID: "5", Username: "Jerry", Password: "JerryPassword", Status: "Hi, I'm Jerry"},
 }
 
+// Configurations
+const (
+	driver  = "postgres"
+	connStr = "postgres://user:password@converse-test-network:5432"
+)
+
 type UserTestSuite struct {
 	suite.Suite
 	db      *sqlx.DB
 	service *UserService
 }
 
+// Connect to the database
+func (s *UserTestSuite) SetupSuite() {
+	db := sqlx.MustConnect(driver, connStr)
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
+
+	s.db = db
+	s.service = &UserService{DB: db}
+}
+
 // Insert fake users data before starting each test
-func (s *UserTestSuite) SetupTestSuite() {
+func (s *UserTestSuite) SetupTest() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
@@ -44,7 +62,7 @@ func (s *UserTestSuite) SetupTestSuite() {
 }
 
 // Delete all fake users before starting each test
-func (s *UserTestSuite) TearDownTestSuite() {
+func (s *UserTestSuite) TearDownTest() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
