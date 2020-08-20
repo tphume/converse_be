@@ -8,7 +8,7 @@ import (
 
 // Client representing the services in the system that interacts with the db
 type Client struct {
-	User UserService
+	User *UserService
 }
 
 // Helper function to return SQL connection

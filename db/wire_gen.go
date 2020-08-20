@@ -12,7 +12,7 @@ import (
 // Injectors from wire.go:
 
 func InitializeClient(database *sqlx.DB) (*Client, error) {
-	userService := UserService{
+	userService := &UserService{
 		DB: database,
 	}
 	client := &Client{
