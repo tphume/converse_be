@@ -124,6 +124,13 @@ func (s *UserTestSuite) TestDeleteCreate() {
 	}
 }
 
+// Test duplicate users
+func (s *UserTestSuite) TestUserDuplicate() {
+	for _, user := range users {
+		s.Require().Error(s.service.CreateUser(&user))
+	}
+}
+
 // Run test suite
 func TestUserSuite(t *testing.T) {
 	suite.Run(t, new(UserTestSuite))
