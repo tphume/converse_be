@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.13.6
+ARG GO_VERSION=1.14.6
 FROM golang:${GO_VERSION}-alpine AS dev
 
 # Install Git

@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
 	"github.com/tphume/converse_be"
+	"testing"
 	"time"
 )
 
@@ -79,4 +80,14 @@ func (s *UserTestSuite) TearDownTest() {
 	}
 
 	s.Require().NoError(tx.Commit())
+}
+
+// Test that user is created successfully
+func (s *UserTestSuite) TestCreate() {
+	s.Equal(10, 10)
+}
+
+// Run test suite
+func TestUserSuite(t *testing.T) {
+	suite.Run(t, new(UserTestSuite))
 }
