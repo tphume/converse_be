@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
@@ -12,11 +13,11 @@ import (
 
 // List of fake users to use for testing
 var users = []converse_be.User{
-	{ID: "1", Username: "Rick", Password: "RickPassword", Status: "Ready to get drunk"},
-	{ID: "2", Username: "Morty", Password: "MortyPassword", Status: "Simping for Jessica"},
-	{ID: "3", Username: "Summer", Password: "SummerPassword", Status: "Boo-ya"},
-	{ID: "4", Username: "Beth", Password: "BethPassword", Status: "Going to family therapy"},
-	{ID: "5", Username: "Jerry", Password: "JerryPassword", Status: "Hi, I'm Jerry"},
+	{ID: padID("1"), Username: "Rick", Password: padPassword("RickPassword"), Status: "Ready to get drunk"},
+	{ID: padID("2"), Username: "Morty", Password: padPassword("MortyPassword"), Status: "Simping for Jessica"},
+	{ID: padID("3"), Username: "Summer", Password: padPassword("SummerPassword"), Status: "Boo-ya"},
+	{ID: padID("4"), Username: "Beth", Password: padPassword("BethPassword"), Status: "Going to family therapy"},
+	{ID: padID("5"), Username: "Jerry", Password: padPassword("JerryPassword"), Status: "Hi, I'm Jerry"},
 }
 
 // Configurations
@@ -82,12 +83,27 @@ func (s *UserTestSuite) TearDownTest() {
 	s.Require().NoError(tx.Commit())
 }
 
-// Test that user is created successfully
-func (s *UserTestSuite) TestCreate() {
-	s.Equal(10, 10)
+// Test Create then read with credentials
+func (s *UserTestSuite) TestCreateReadCredentials() {
+	user := &converse_be.User{ID: padID("6"), Username: "Meeseeks", Password: padPassword("MeeseeksPassword")}
+	s.Require().NoError(s.service.CreateUser(user))
+
+	readUser := &converse_be.User{Username: "Meeseeks"}
+	s.Require().NoError(s.service.ReadUserWithCredentials(readUser))
+
+	s.Equal(*user, *readUser)
 }
 
 // Run test suite
 func TestUserSuite(t *testing.T) {
 	suite.Run(t, new(UserTestSuite))
+}
+
+// Padded generator (since our db uses CHAR type)
+func padID(s string) string {
+	return fmt.Sprintf("%-36v", s)
+}
+
+func padPassword(s string) string {
+	return fmt.Sprintf("%-60v", s)
 }
