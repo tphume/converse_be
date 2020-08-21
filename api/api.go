@@ -6,13 +6,22 @@ import (
 
 // Interface for our handler routes
 type Handler interface {
-	HandlerName() string
-	InitRoute(group *gin.RouterGroup) error
+	InitRoute(router *gin.RouterGroup) error
 }
 
 // Our http web service
 type Server struct {
-	Handlers []*Handler
+	Engine   *gin.Engine
+	Handlers []Handler
+}
+
+func InitServer(s *Server) {
+	router := s.Engine.Group("/api")
+	for _, h := range s.Handlers {
+		if err := h.InitRoute(router); err != nil {
+			panic(err)
+		}
+	}
 }
 
 // Error messages
