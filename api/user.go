@@ -18,6 +18,17 @@ type UserService struct {
 	DB UserDB
 }
 
+// Methods to satisfy Handler interface in api.go
+
+func (s *UserService) HandlerName() string {
+	panic("implement me")
+}
+
+func (s *UserService) InitRoute(group *gin.RouterGroup) error {
+	panic("implement me")
+}
+
+// Below are the methods for our web service api
 func (s *UserService) SignUp(ctx *gin.Context) {
 
 }

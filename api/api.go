@@ -1,10 +1,18 @@
 package api
 
-import "github.com/tphume/converse_be/db"
+import (
+	"github.com/gin-gonic/gin"
+)
+
+// Interface for our handler routes
+type Handler interface {
+	HandlerName() string
+	InitRoute(group *gin.RouterGroup) error
+}
 
 // Our http web service
 type Server struct {
-	DBClient *db.Client
+	Handlers []*Handler
 }
 
 // Error messages
