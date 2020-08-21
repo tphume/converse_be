@@ -6,3 +6,8 @@ import "github.com/tphume/converse_be/db"
 type Server struct {
 	DBClient *db.Client
 }
+
+// Error messages
+const (
+	errInternal = "something went really wrong here"
+)

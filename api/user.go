@@ -33,3 +33,9 @@ func (s *UserService) ChangePassword(ctx *gin.Context) {
 func (s *UserService) ChangeStatus(ctx *gin.Context) {
 
 }
+
+// Error messages
+const (
+	errUserNotFound  = "could not find matching user"
+	errUserDuplicate = "a user with that name already exist"
+)
